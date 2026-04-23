@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiaoyi.trade.mapper.MerchantMapper">
+    <resultMap id="BaseResultMap" type="com.jiaoyi.trade.entity.Merchant">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="client_no" property="clientNo" jdbcType="VARCHAR"/>
+        <result column="merchant_name" property="merchantName" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="public_key" property="publicKey" jdbcType="VARCHAR"/>
+        <result column="private_key" property="privateKey" jdbcType="VARCHAR"/>
+        <result column="balance" property="balance" jdbcType="DECIMAL"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.jiaoyi.trade.entity.Merchant" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO merchant (client_no, merchant_name, status, public_key, private_key, balance)
+        VALUES (#{clientNo}, #{merchantName}, #{status}, #{publicKey}, #{privateKey}, #{balance})
+    </insert>
+
+    <update id="updateById" parameterType="com.jiaoyi.trade.entity.Merchant">
+        UPDATE merchant SET
+            merchant_name = #{merchantName},
+            status = #{status},
+            public_key = #{publicKey},
+            private_key = #{privateKey},
+            balance = #{balance},
+            update_time = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+</mapper>

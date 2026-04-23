@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jiaoyi.trade.mapper.TransactionRequestMapper">
+    <resultMap id="BaseResultMap" type="com.jiaoyi.trade.entity.TransactionRequest">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="uuid" property="uuid" jdbcType="VARCHAR"/>
+        <result column="client_no" property="clientNo" jdbcType="VARCHAR"/>
+        <result column="version" property="version" jdbcType="VARCHAR"/>
+        <result column="order_no" property="orderNo" jdbcType="VARCHAR"/>
+        <result column="amount" property="amount" jdbcType="DECIMAL"/>
+        <result column="currency" property="currency" jdbcType="VARCHAR"/>
+        <result column="notify_url" property="notifyUrl" jdbcType="VARCHAR"/>
+        <result column="return_url" property="returnUrl" jdbcType="VARCHAR"/>
+        <result column="subject" property="subject" jdbcType="VARCHAR"/>
+        <result column="body" property="body" jdbcType="VARCHAR"/>
+        <result column="attach" property="attach" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="sign" property="sign" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.jiaoyi.trade.entity.TransactionRequest" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO transaction_request (
+            uuid, client_no, version, order_no, amount, currency, notify_url, return_url, 
+            subject, body, attach, status, sign
+        ) VALUES (
+            #{uuid}, #{clientNo}, #{version}, #{orderNo}, #{amount}, #{currency}, 
+            #{notifyUrl}, #{returnUrl}, #{subject}, #{body}, #{attach}, #{status}, #{sign}
+        )
+    </insert>
+
+    <update id="updateById" parameterType="com.jiaoyi.trade.entity.TransactionRequest">
+        UPDATE transaction_request SET
+            status = #{status},
+            update_time = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectByClientNo" resultMap="BaseResultMap">
+        SELECT * FROM transaction_request WHERE client_no = #{clientNo} ORDER BY create_time DESC
+    </select>
+</mapper>
