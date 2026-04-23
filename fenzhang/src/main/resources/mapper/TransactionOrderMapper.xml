@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fenzhang.mapper.TransactionOrderMapper">
+
+    <resultMap id="TransactionOrderResultMap" type="com.fenzhang.entity.TransactionOrder">
+        <id column="id" property="id"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="agent_code" property="agentCode"/>
+        <result column="agent_name" property="agentName"/>
+        <result column="transaction_amount" property="transactionAmount"/>
+        <result column="order_status" property="orderStatus"/>
+        <result column="profit_status" property="profitStatus"/>
+        <result column="transaction_time" property="transactionTime"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <select id="findById" resultMap="TransactionOrderResultMap">
+        SELECT * FROM transaction_order WHERE id = #{id}
+    </select>
+
+    <select id="findByOrderNo" resultMap="TransactionOrderResultMap">
+        SELECT * FROM transaction_order WHERE order_no = #{orderNo}
+    </select>
+
+    <select id="findByProfitStatus" resultMap="TransactionOrderResultMap">
+        SELECT * FROM transaction_order WHERE profit_status = #{profitStatus}
+    </select>
+
+    <select id="findByAgentCode" resultMap="TransactionOrderResultMap">
+        SELECT * FROM transaction_order WHERE agent_code = #{agentCode}
+    </select>
+
+    <select id="findAll" resultMap="TransactionOrderResultMap">
+        SELECT * FROM transaction_order
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO transaction_order (order_no, agent_code, agent_name, transaction_amount, order_status, profit_status, transaction_time)
+        VALUES (#{orderNo}, #{agentCode}, #{agentName}, #{transactionAmount}, #{orderStatus}, #{profitStatus}, #{transactionTime})
+    </insert>
+
+    <update id="update">
+        UPDATE transaction_order SET 
+            agent_code = #{agentCode},
+            agent_name = #{agentName},
+            transaction_amount = #{transactionAmount},
+            order_status = #{orderStatus},
+            profit_status = #{profitStatus}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateProfitStatus">
+        UPDATE transaction_order SET profit_status = #{profitStatus} WHERE order_no = #{orderNo}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM transaction_order WHERE id = #{id}
+    </delete>
+
+</mapper>

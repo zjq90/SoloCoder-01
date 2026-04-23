@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fenzhang.mapper.AccountDetailMapper">
+
+    <resultMap id="AccountDetailResultMap" type="com.fenzhang.entity.AccountDetail">
+        <id column="id" property="id"/>
+        <result column="detail_no" property="detailNo"/>
+        <result column="agent_code" property="agentCode"/>
+        <result column="agent_name" property="agentName"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="profit_no" property="profitNo"/>
+        <result column="transaction_type" property="transactionType"/>
+        <result column="amount" property="amount"/>
+        <result column="before_balance" property="beforeBalance"/>
+        <result column="after_balance" property="afterBalance"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <select id="findById" resultMap="AccountDetailResultMap">
+        SELECT * FROM account_detail WHERE id = #{id}
+    </select>
+
+    <select id="findByDetailNo" resultMap="AccountDetailResultMap">
+        SELECT * FROM account_detail WHERE detail_no = #{detailNo}
+    </select>
+
+    <select id="findByAgentCode" resultMap="AccountDetailResultMap">
+        SELECT * FROM account_detail WHERE agent_code = #{agentCode}
+    </select>
+
+    <select id="findByProfitNo" resultMap="AccountDetailResultMap">
+        SELECT * FROM account_detail WHERE profit_no = #{profitNo}
+    </select>
+
+    <select id="findAll" resultMap="AccountDetailResultMap">
+        SELECT * FROM account_detail
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO account_detail (detail_no, agent_code, agent_name, order_no, profit_no, 
+                                    transaction_type, amount, before_balance, after_balance, remark)
+        VALUES (#{detailNo}, #{agentCode}, #{agentName}, #{orderNo}, #{profitNo}, 
+                #{transactionType}, #{amount}, #{beforeBalance}, #{afterBalance}, #{remark})
+    </insert>
+
+    <update id="update">
+        UPDATE account_detail SET 
+            agent_code = #{agentCode},
+            agent_name = #{agentName},
+            order_no = #{orderNo},
+            profit_no = #{profitNo},
+            transaction_type = #{transactionType},
+            amount = #{amount},
+            before_balance = #{beforeBalance},
+            after_balance = #{afterBalance},
+            remark = #{remark}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM account_detail WHERE id = #{id}
+    </delete>
+
+</mapper>

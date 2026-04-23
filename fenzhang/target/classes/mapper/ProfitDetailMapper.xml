@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fenzhang.mapper.ProfitDetailMapper">
+
+    <resultMap id="ProfitDetailResultMap" type="com.fenzhang.entity.ProfitDetail">
+        <id column="id" property="id"/>
+        <result column="profit_no" property="profitNo"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="agent_code" property="agentCode"/>
+        <result column="agent_name" property="agentName"/>
+        <result column="parent_agent_code" property="parentAgentCode"/>
+        <result column="transaction_amount" property="transactionAmount"/>
+        <result column="platform_profit_rate" property="platformProfitRate"/>
+        <result column="agent_profit_rate" property="agentProfitRate"/>
+        <result column="profit_rate_diff" property="profitRateDiff"/>
+        <result column="profit_amount" property="profitAmount"/>
+        <result column="profit_time" property="profitTime"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <select id="findById" resultMap="ProfitDetailResultMap">
+        SELECT * FROM profit_detail WHERE id = #{id}
+    </select>
+
+    <select id="findByProfitNo" resultMap="ProfitDetailResultMap">
+        SELECT * FROM profit_detail WHERE profit_no = #{profitNo}
+    </select>
+
+    <select id="findByOrderNo" resultMap="ProfitDetailResultMap">
+        SELECT * FROM profit_detail WHERE order_no = #{orderNo}
+    </select>
+
+    <select id="findByAgentCode" resultMap="ProfitDetailResultMap">
+        SELECT * FROM profit_detail WHERE agent_code = #{agentCode}
+    </select>
+
+    <select id="findAll" resultMap="ProfitDetailResultMap">
+        SELECT * FROM profit_detail
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO profit_detail (profit_no, order_no, agent_code, agent_name, parent_agent_code, 
+                                    transaction_amount, platform_profit_rate, agent_profit_rate, profit_rate_diff, 
+                                    profit_amount, profit_time)
+        VALUES (#{profitNo}, #{orderNo}, #{agentCode}, #{agentName}, #{parentAgentCode}, 
+                #{transactionAmount}, #{platformProfitRate}, #{agentProfitRate}, #{profitRateDiff}, 
+                #{profitAmount}, #{profitTime})
+    </insert>
+
+    <update id="update">
+        UPDATE profit_detail SET 
+            agent_code = #{agentCode},
+            agent_name = #{agentName},
+            parent_agent_code = #{parentAgentCode},
+            transaction_amount = #{transactionAmount},
+            platform_profit_rate = #{platformProfitRate},
+            agent_profit_rate = #{agentProfitRate},
+            profit_rate_diff = #{profitRateDiff},
+            profit_amount = #{profitAmount}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM profit_detail WHERE id = #{id}
+    </delete>
+
+</mapper>
