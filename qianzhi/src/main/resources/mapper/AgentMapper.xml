@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qianzhi.mapper.AgentMapper">
+
+    <resultMap id="BaseResultMap" type="com.qianzhi.entity.Agent">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="agent_name" property="agentName"/>
+        <result column="agent_code" property="agentCode"/>
+        <result column="agent_level" property="agentLevel"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="contact" property="contact"/>
+        <result column="address" property="address"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="parent_name" property="parentName"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        a.id, a.user_id, a.agent_name, a.agent_code, a.agent_level, a.parent_id, 
+        a.contact, a.address, a.status, a.create_time, a.update_time,
+        pa.agent_name as parent_name
+    </sql>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM agents a
+        LEFT JOIN agents pa ON a.parent_id = pa.id
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="selectByUserId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM agents a
+        LEFT JOIN agents pa ON a.parent_id = pa.id
+        WHERE a.user_id = #{userId}
+    </select>
+
+    <select id="selectByParentId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM agents a
+        LEFT JOIN agents pa ON a.parent_id = pa.id
+        WHERE a.parent_id = #{parentId}
+    </select>
+
+    <select id="selectByLevel" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM agents a
+        LEFT JOIN agents pa ON a.parent_id = pa.id
+        WHERE a.agent_level = #{level}
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM agents a
+        LEFT JOIN agents pa ON a.parent_id = pa.id
+        ORDER BY a.create_time DESC
+    </select>
+
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM agents a
+        LEFT JOIN agents pa ON a.parent_id = pa.id
+        WHERE 1=1
+        <if test="agentName != null and agentName != ''">
+            AND a.agent_name LIKE CONCAT('%', #{agentName}, '%')
+        </if>
+        <if test="agentCode != null and agentCode != ''">
+            AND a.agent_code LIKE CONCAT('%', #{agentCode}, '%')
+        </if>
+        <if test="status != null">
+            AND a.status = #{status}
+        </if>
+        ORDER BY a.create_time DESC
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO agents (user_id, agent_name, agent_code, agent_level, parent_id, 
+                            contact, address, status, create_time, update_time)
+        VALUES (#{userId}, #{agentName}, #{agentCode}, #{agentLevel}, #{parentId}, 
+                #{contact}, #{address}, #{status}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    </insert>
+
+    <update id="update">
+        UPDATE agents
+        SET user_id = #{userId},
+            agent_name = #{agentName},
+            agent_code = #{agentCode},
+            agent_level = #{agentLevel},
+            parent_id = #{parentId},
+            contact = #{contact},
+            address = #{address},
+            status = #{status},
+            update_time = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM agents WHERE id = #{id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qianzhi.mapper.AccountMapper">
+
+    <resultMap id="BaseResultMap" type="com.qianzhi.entity.Account">
+        <id column="id" property="id"/>
+        <result column="agent_id" property="agentId"/>
+        <result column="balance" property="balance"/>
+        <result column="frozen_amount" property="frozenAmount"/>
+        <result column="total_income" property="totalIncome"/>
+        <result column="total_withdraw" property="totalWithdraw"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="agent_name" property="agentName"/>
+        <result column="agent_code" property="agentCode"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        acc.id, acc.agent_id, acc.balance, acc.frozen_amount, acc.total_income, 
+        acc.total_withdraw, acc.status, acc.create_time, acc.update_time,
+        a.agent_name as agent_name, a.agent_code as agent_code
+    </sql>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM accounts acc
+        LEFT JOIN agents a ON acc.agent_id = a.id
+        WHERE acc.id = #{id}
+    </select>
+
+    <select id="selectByAgentId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM accounts acc
+        LEFT JOIN agents a ON acc.agent_id = a.id
+        WHERE acc.agent_id = #{agentId}
+    </select>
+
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM accounts acc
+        LEFT JOIN agents a ON acc.agent_id = a.id
+        WHERE 1=1
+        <if test="agentId != null">
+            AND acc.agent_id = #{agentId}
+        </if>
+        ORDER BY acc.create_time DESC
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO accounts (agent_id, balance, frozen_amount, total_income, total_withdraw, status, create_time, update_time)
+        VALUES (#{agentId}, #{balance}, #{frozenAmount}, #{totalIncome}, #{totalWithdraw}, #{status}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    </insert>
+
+    <update id="update">
+        UPDATE accounts
+        SET agent_id = #{agentId},
+            balance = #{balance},
+            frozen_amount = #{frozenAmount},
+            total_income = #{totalIncome},
+            total_withdraw = #{totalWithdraw},
+            status = #{status},
+            update_time = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateBalance">
+        UPDATE accounts
+        SET balance = balance + #{balanceChange},
+            <if test="totalIncomeChange != null">
+                total_income = total_income + #{totalIncomeChange},
+            </if>
+            <if test="totalWithdrawChange != null">
+                total_withdraw = total_withdraw + #{totalWithdrawChange},
+            </if>
+            update_time = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+</mapper>

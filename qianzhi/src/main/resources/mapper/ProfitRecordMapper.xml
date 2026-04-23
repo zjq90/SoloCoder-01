@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qianzhi.mapper.ProfitRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.qianzhi.entity.ProfitRecord">
+        <id column="id" property="id"/>
+        <result column="agent_id" property="agentId"/>
+        <result column="product_id" property="productId"/>
+        <result column="transaction_amount" property="transactionAmount"/>
+        <result column="profit_rate" property="profitRate"/>
+        <result column="profit_amount" property="profitAmount"/>
+        <result column="merchant_id" property="merchantId"/>
+        <result column="machine_id" property="machineId"/>
+        <result column="transaction_no" property="transactionNo"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="agent_name" property="agentName"/>
+        <result column="product_name" property="productName"/>
+        <result column="merchant_name" property="merchantName"/>
+        <result column="machine_sn" property="machineSn"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        pr.id, pr.agent_id, pr.product_id, pr.transaction_amount, pr.profit_rate, 
+        pr.profit_amount, pr.merchant_id, pr.machine_id, pr.transaction_no, pr.status, pr.create_time,
+        a.agent_name as agent_name, p.product_name as product_name,
+        m.merchant_name as merchant_name, mac.machine_sn as machine_sn
+    </sql>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM profit_records pr
+        LEFT JOIN agents a ON pr.agent_id = a.id
+        LEFT JOIN products p ON pr.product_id = p.id
+        LEFT JOIN merchants m ON pr.merchant_id = m.id
+        LEFT JOIN machines mac ON pr.machine_id = mac.id
+        WHERE pr.id = #{id}
+    </select>
+
+    <select id="selectByAgentId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM profit_records pr
+        LEFT JOIN agents a ON pr.agent_id = a.id
+        LEFT JOIN products p ON pr.product_id = p.id
+        LEFT JOIN merchants m ON pr.merchant_id = m.id
+        LEFT JOIN machines mac ON pr.machine_id = mac.id
+        WHERE pr.agent_id = #{agentId}
+        ORDER BY pr.create_time DESC
+    </select>
+
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM profit_records pr
+        LEFT JOIN agents a ON pr.agent_id = a.id
+        LEFT JOIN products p ON pr.product_id = p.id
+        LEFT JOIN merchants m ON pr.merchant_id = m.id
+        LEFT JOIN machines mac ON pr.machine_id = mac.id
+        WHERE 1=1
+        <if test="agentId != null">
+            AND pr.agent_id = #{agentId}
+        </if>
+        <if test="productId != null">
+            AND pr.product_id = #{productId}
+        </if>
+        <if test="status != null">
+            AND pr.status = #{status}
+        </if>
+        <if test="startTime != null and startTime != ''">
+            AND pr.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            AND pr.create_time &lt;= #{endTime}
+        </if>
+        ORDER BY pr.create_time DESC
+    </select>
+
+    <select id="sumProfitAmount" resultType="java.math.BigDecimal">
+        SELECT COALESCE(SUM(profit_amount), 0)
+        FROM profit_records
+        WHERE agent_id = #{agentId}
+        <if test="startTime != null and startTime != ''">
+            AND create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            AND create_time &lt;= #{endTime}
+        </if>
+    </select>
+
+    <select id="countByAgentId" resultType="long">
+        SELECT COUNT(*) FROM profit_records WHERE agent_id = #{agentId}
+    </select>
+
+    <select id="selectPage" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM profit_records pr
+        LEFT JOIN agents a ON pr.agent_id = a.id
+        LEFT JOIN products p ON pr.product_id = p.id
+        LEFT JOIN merchants m ON pr.merchant_id = m.id
+        LEFT JOIN machines mac ON pr.machine_id = mac.id
+        WHERE pr.agent_id = #{agentId}
+        ORDER BY pr.create_time DESC
+        LIMIT #{offset}, #{size}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO profit_records (agent_id, product_id, transaction_amount, profit_rate, 
+                                     profit_amount, merchant_id, machine_id, transaction_no, status, create_time)
+        VALUES (#{agentId}, #{productId}, #{transactionAmount}, #{profitRate}, 
+                #{profitAmount}, #{merchantId}, #{machineId}, #{transactionNo}, #{status}, CURRENT_TIMESTAMP)
+    </insert>
+
+</mapper>

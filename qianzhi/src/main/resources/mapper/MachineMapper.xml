@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qianzhi.mapper.MachineMapper">
+
+    <resultMap id="BaseResultMap" type="com.qianzhi.entity.Machine">
+        <id column="id" property="id"/>
+        <result column="agent_id" property="agentId"/>
+        <result column="merchant_id" property="merchantId"/>
+        <result column="machine_sn" property="machineSn"/>
+        <result column="machine_name" property="machineName"/>
+        <result column="machine_type" property="machineType"/>
+        <result column="bind_time" property="bindTime"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="agent_name" property="agentName"/>
+        <result column="merchant_name" property="merchantName"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        mac.id, mac.agent_id, mac.merchant_id, mac.machine_sn, mac.machine_name, 
+        mac.machine_type, mac.bind_time, mac.status, mac.create_time, mac.update_time,
+        a.agent_name as agent_name, m.merchant_name as merchant_name
+    </sql>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM machines mac
+        LEFT JOIN agents a ON mac.agent_id = a.id
+        LEFT JOIN merchants m ON mac.merchant_id = m.id
+        WHERE mac.id = #{id}
+    </select>
+
+    <select id="selectBySn" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM machines mac
+        LEFT JOIN agents a ON mac.agent_id = a.id
+        LEFT JOIN merchants m ON mac.merchant_id = m.id
+        WHERE mac.machine_sn = #{machineSn}
+    </select>
+
+    <select id="selectByAgentId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM machines mac
+        LEFT JOIN agents a ON mac.agent_id = a.id
+        LEFT JOIN merchants m ON mac.merchant_id = m.id
+        WHERE mac.agent_id = #{agentId}
+        ORDER BY mac.create_time DESC
+    </select>
+
+    <select id="selectByMerchantId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM machines mac
+        LEFT JOIN agents a ON mac.agent_id = a.id
+        LEFT JOIN merchants m ON mac.merchant_id = m.id
+        WHERE mac.merchant_id = #{merchantId}
+        ORDER BY mac.create_time DESC
+    </select>
+
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM machines mac
+        LEFT JOIN agents a ON mac.agent_id = a.id
+        LEFT JOIN merchants m ON mac.merchant_id = m.id
+        WHERE 1=1
+        <if test="agentId != null">
+            AND mac.agent_id = #{agentId}
+        </if>
+        <if test="merchantId != null">
+            AND mac.merchant_id = #{merchantId}
+        </if>
+        <if test="machineSn != null and machineSn != ''">
+            AND mac.machine_sn LIKE CONCAT('%', #{machineSn}, '%')
+        </if>
+        <if test="status != null">
+            AND mac.status = #{status}
+        </if>
+        ORDER BY mac.create_time DESC
+    </select>
+
+    <select id="countByAgentId" resultType="long">
+        SELECT COUNT(*) FROM machines WHERE agent_id = #{agentId}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO machines (agent_id, merchant_id, machine_sn, machine_name, machine_type, 
+                              bind_time, status, create_time, update_time)
+        VALUES (#{agentId}, #{merchantId}, #{machineSn}, #{machineName}, #{machineType}, 
+                #{bindTime}, #{status}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    </insert>
+
+    <update id="update">
+        UPDATE machines
+        SET agent_id = #{agentId},
+            merchant_id = #{merchantId},
+            machine_sn = #{machineSn},
+            machine_name = #{machineName},
+            machine_type = #{machineType},
+            bind_time = #{bindTime},
+            status = #{status},
+            update_time = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM machines WHERE id = #{id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qianzhi.mapper.ProfitConfigMapper">
+
+    <resultMap id="BaseResultMap" type="com.qianzhi.entity.ProfitConfig">
+        <id column="id" property="id"/>
+        <result column="agent_id" property="agentId"/>
+        <result column="product_id" property="productId"/>
+        <result column="profit_rate" property="profitRate"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="agent_name" property="agentName"/>
+        <result column="product_name" property="productName"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        pc.id, pc.agent_id, pc.product_id, pc.profit_rate, pc.create_time, pc.update_time,
+        a.agent_name as agent_name, p.product_name as product_name
+    </sql>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM profit_configs pc
+        LEFT JOIN agents a ON pc.agent_id = a.id
+        LEFT JOIN products p ON pc.product_id = p.id
+        WHERE pc.id = #{id}
+    </select>
+
+    <select id="selectByAgentAndProduct" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM profit_configs pc
+        LEFT JOIN agents a ON pc.agent_id = a.id
+        LEFT JOIN products p ON pc.product_id = p.id
+        WHERE pc.agent_id = #{agentId} AND pc.product_id = #{productId}
+    </select>
+
+    <select id="selectByAgentId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM profit_configs pc
+        LEFT JOIN agents a ON pc.agent_id = a.id
+        LEFT JOIN products p ON pc.product_id = p.id
+        WHERE pc.agent_id = #{agentId}
+    </select>
+
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM profit_configs pc
+        LEFT JOIN agents a ON pc.agent_id = a.id
+        LEFT JOIN products p ON pc.product_id = p.id
+        WHERE 1=1
+        <if test="agentId != null">
+            AND pc.agent_id = #{agentId}
+        </if>
+        <if test="productId != null">
+            AND pc.product_id = #{productId}
+        </if>
+        ORDER BY pc.create_time DESC
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO profit_configs (agent_id, product_id, profit_rate, create_time, update_time)
+        VALUES (#{agentId}, #{productId}, #{profitRate}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    </insert>
+
+    <update id="update">
+        UPDATE profit_configs
+        SET agent_id = #{agentId},
+            product_id = #{productId},
+            profit_rate = #{profitRate},
+            update_time = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM profit_configs WHERE id = #{id}
+    </delete>
+
+</mapper>

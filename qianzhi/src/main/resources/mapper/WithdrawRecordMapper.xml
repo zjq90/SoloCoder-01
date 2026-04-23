@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qianzhi.mapper.WithdrawRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.qianzhi.entity.WithdrawRecord">
+        <id column="id" property="id"/>
+        <result column="account_id" property="accountId"/>
+        <result column="agent_id" property="agentId"/>
+        <result column="amount" property="amount"/>
+        <result column="fee_rate" property="feeRate"/>
+        <result column="fee_amount" property="feeAmount"/>
+        <result column="actual_amount" property="actualAmount"/>
+        <result column="bank_name" property="bankName"/>
+        <result column="bank_account" property="bankAccount"/>
+        <result column="bank_holder" property="bankHolder"/>
+        <result column="status" property="status"/>
+        <result column="remark" property="remark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="agent_name" property="agentName"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        wr.id, wr.account_id, wr.agent_id, wr.amount, wr.fee_rate, wr.fee_amount, 
+        wr.actual_amount, wr.bank_name, wr.bank_account, wr.bank_holder, wr.status, 
+        wr.remark, wr.create_time, wr.update_time,
+        a.agent_name as agent_name
+    </sql>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM withdraw_records wr
+        LEFT JOIN agents a ON wr.agent_id = a.id
+        WHERE wr.id = #{id}
+    </select>
+
+    <select id="selectByAgentId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM withdraw_records wr
+        LEFT JOIN agents a ON wr.agent_id = a.id
+        WHERE wr.agent_id = #{agentId}
+        ORDER BY wr.create_time DESC
+    </select>
+
+    <select id="selectList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM withdraw_records wr
+        LEFT JOIN agents a ON wr.agent_id = a.id
+        WHERE 1=1
+        <if test="agentId != null">
+            AND wr.agent_id = #{agentId}
+        </if>
+        <if test="status != null">
+            AND wr.status = #{status}
+        </if>
+        <if test="startTime != null and startTime != ''">
+            AND wr.create_time &gt;= #{startTime}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            AND wr.create_time &lt;= #{endTime}
+        </if>
+        ORDER BY wr.create_time DESC
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO withdraw_records (account_id, agent_id, amount, fee_rate, fee_amount, 
+                                       actual_amount, bank_name, bank_account, bank_holder, 
+                                       status, remark, create_time, update_time)
+        VALUES (#{accountId}, #{agentId}, #{amount}, #{feeRate}, #{feeAmount}, 
+                #{actualAmount}, #{bankName}, #{bankAccount}, #{bankHolder}, 
+                #{status}, #{remark}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    </insert>
+
+    <update id="update">
+        UPDATE withdraw_records
+        SET account_id = #{accountId},
+            agent_id = #{agentId},
+            amount = #{amount},
+            fee_rate = #{feeRate},
+            fee_amount = #{feeAmount},
+            actual_amount = #{actualAmount},
+            bank_name = #{bankName},
+            bank_account = #{bankAccount},
+            bank_holder = #{bankHolder},
+            status = #{status},
+            remark = #{remark},
+            update_time = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        UPDATE withdraw_records
+        SET status = #{status},
+            update_time = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+</mapper>
