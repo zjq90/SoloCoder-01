@@ -1,0 +1,191 @@
+{
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "首页",
+        "navigationBarBackgroundColor": "#E53935",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/manage/index",
+      "style": {
+        "navigationBarTitleText": "管理",
+        "navigationBarBackgroundColor": "#E53935",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/profile/index",
+      "style": {
+        "navigationBarTitleText": "个人",
+        "navigationBarBackgroundColor": "#E53935",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/transaction/detail",
+      "style": {
+        "navigationBarTitleText": "交易明细",
+        "navigationBarBackgroundColor": "#E53935",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/profit/detail",
+      "style": {
+        "navigationBarTitleText": "分润明细",
+        "navigationBarBackgroundColor": "#E53935",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/merchant/list",
+      "style": {
+        "navigationBarTitleText": "商户列表",
+        "navigationBarBackgroundColor": "#E53935",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/merchant/detail",
+      "style": {
+        "navigationBarTitleText": "商户详情",
+        "navigationBarBackgroundColor": "#E53935",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/agent/list",
+      "style": {
+        "navigationBarTitleText": "代理列表",
+        "navigationBarBackgroundColor": "#E53935",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/agent/detail",
+      "style": {
+        "navigationBarTitleText": "代理详情",
+        "navigationBarBackgroundColor": "#E53935",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/product/list",
+      "style": {
+        "navigationBarTitleText": "产品列表",
+        "navigationBarBackgroundColor": "#E53935",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/product/detail",
+      "style": {
+        "navigationBarTitleText": "产品详情",
+        "navigationBarBackgroundColor": "#E53935",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/machine/list",
+      "style": {
+        "navigationBarTitleText": "机器列表",
+        "navigationBarBackgroundColor": "#E53935",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/machine/detail",
+      "style": {
+        "navigationBarTitleText": "机器详情",
+        "navigationBarBackgroundColor": "#E53935",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/manage/product",
+      "style": {
+        "navigationBarTitleText": "产品管理",
+        "navigationBarBackgroundColor": "#E53935",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/manage/machine",
+      "style": {
+        "navigationBarTitleText": "机器管理",
+        "navigationBarBackgroundColor": "#E53935",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/manage/agent",
+      "style": {
+        "navigationBarTitleText": "代理管理",
+        "navigationBarBackgroundColor": "#E53935",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/manage/merchant",
+      "style": {
+        "navigationBarTitleText": "商户管理",
+        "navigationBarBackgroundColor": "#E53935",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/account/index",
+      "style": {
+        "navigationBarTitleText": "我的账户",
+        "navigationBarBackgroundColor": "#E53935",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/profit/index",
+      "style": {
+        "navigationBarTitleText": "分润记录",
+        "navigationBarBackgroundColor": "#E53935",
+        "navigationBarTextStyle": "white"
+      }
+    },
+    {
+      "path": "pages/settings/index",
+      "style": {
+        "navigationBarTitleText": "设置",
+        "navigationBarBackgroundColor": "#E53935",
+        "navigationBarTextStyle": "white"
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "TradePro",
+    "navigationBarBackgroundColor": "#E53935",
+    "backgroundColor": "#F5F5F5",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#E53935",
+    "borderStyle": "black",
+    "backgroundColor": "#FFFFFF",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/manage/index",
+        "text": "管理"
+      },
+      {
+        "pagePath": "pages/profile/index",
+        "text": "个人"
+      }
+    ]
+  }
+}
