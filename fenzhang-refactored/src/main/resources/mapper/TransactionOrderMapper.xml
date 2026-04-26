@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fenzhang.mapper.TransactionOrderMapper">
+
+    <resultMap id="TransactionOrderResultMap" type="com.fenzhang.entity.TransactionOrder">
+        <id column="id" property="id"/>
+        <result column="order_no" property="orderNo"/>
+        <result column="agent_code" property="agentCode"/>
+        <result column="agent_name" property="agentName"/>
+        <result column="transaction_amount" property="transactionAmount"/>
+        <result column="order_status" property="orderStatus"/>
+        <result column="profit_status" property="profitStatus"/>
+        <result column="transaction_time" property="transactionTime"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <select id="findById" resultMap="TransactionOrderResultMap">
+        SELECT * FROM transaction_order WHERE id = #{id}
+    </select>
+
+    <select id="findByOrderNo" resultMap="TransactionOrderResultMap">
+        SELECT * FROM transaction_order WHERE order_no = #{orderNo}
+    </select>
+
+    <select id="findByProfitStatus" resultMap="TransactionOrderResultMap">
+        SELECT * FROM transaction_order WHERE profit_status = #{profitStatus}
+    </select>
+
+    <select id="findByAgentCode" resultMap="TransactionOrderResultMap">
+        SELECT * FROM transaction_order WHERE agent_code = #{agentCode}
+    </select>
+
+    <select id="findAll" resultMap="TransactionOrderResultMap">
+        SELECT * FROM transaction_order
+    </select>
+
+    <select id="findPendingOrdersWithLimit" resultMap="TransactionOrderResultMap">
+        SELECT * FROM transaction_order 
+        WHERE profit_status = 0 
+        ORDER BY create_time ASC 
+        LIMIT #{limit}
+    </select>
+
+    <select id="countPendingOrders" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM transaction_order WHERE profit_status = 0
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO transaction_order (order_no, agent_code, agent_name, transaction_amount, order_status, profit_status, transaction_time)
+        VALUES (#{orderNo}, #{agentCode}, #{agentName}, #{transactionAmount}, #{orderStatus}, #{profitStatus}, #{transactionTime})
+    </insert>
+
+    <update id="update">
+        UPDATE transaction_order SET 
+            agent_code = #{agentCode},
+            agent_name = #{agentName},
+            transaction_amount = #{transactionAmount},
+            order_status = #{orderStatus},
+            profit_status = #{profitStatus}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateProfitStatus">
+        UPDATE transaction_order SET profit_status = #{profitStatus} WHERE order_no = #{orderNo}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM transaction_order WHERE id = #{id}
+    </delete>
+
+    <select id="callCalculateProfitForOrder" statementType="CALLABLE">
+        {CALL sp_calculate_profit_for_order(
+            #{orderNo, mode=IN, jdbcType=VARCHAR},
+            #{batchNo, mode=IN, jdbcType=VARCHAR},
+            #{platformCode, mode=IN, jdbcType=VARCHAR},
+            #{resultCode, mode=OUT, jdbcType=INTEGER},
+            #{resultMsg, mode=OUT, jdbcType=VARCHAR}
+        )}
+    </select>
+
+    <select id="callCalculateProfitBatch" statementType="CALLABLE">
+        {CALL sp_calculate_profit_batch(
+            #{batchNo, mode=IN, jdbcType=VARCHAR},
+            #{platformCode, mode=IN, jdbcType=VARCHAR},
+            #{batchSize, mode=IN, jdbcType=INTEGER},
+            #{successCount, mode=OUT, jdbcType=INTEGER},
+            #{failCount, mode=OUT, jdbcType=INTEGER}
+        )}
+    </select>
+
+</mapper>

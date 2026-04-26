@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fenzhang.mapper.StatementMapper">
+
+    <resultMap id="StatementResultMap" type="com.fenzhang.entity.Statement">
+        <id column="id" property="id"/>
+        <result column="statement_no" property="statementNo"/>
+        <result column="statement_period" property="statementPeriod"/>
+        <result column="agent_code" property="agentCode"/>
+        <result column="agent_name" property="agentName"/>
+        <result column="total_transaction_amount" property="totalTransactionAmount"/>
+        <result column="total_profit_amount" property="totalProfitAmount"/>
+        <result column="transaction_count" property="transactionCount"/>
+        <result column="profit_count" property="profitCount"/>
+        <result column="statement_status" property="statementStatus"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="findById" resultMap="StatementResultMap">
+        SELECT * FROM statement WHERE id = #{id}
+    </select>
+
+    <select id="findByStatementNo" resultMap="StatementResultMap">
+        SELECT * FROM statement WHERE statement_no = #{statementNo}
+    </select>
+
+    <select id="findByAgentCode" resultMap="StatementResultMap">
+        SELECT * FROM statement WHERE agent_code = #{agentCode} ORDER BY statement_period DESC
+    </select>
+
+    <select id="findByStatementPeriod" resultMap="StatementResultMap">
+        SELECT * FROM statement WHERE statement_period = #{statementPeriod}
+    </select>
+
+    <select id="findByAgentCodeAndPeriod" resultMap="StatementResultMap">
+        SELECT * FROM statement WHERE agent_code = #{agentCode} AND statement_period = #{statementPeriod}
+    </select>
+
+    <select id="findAll" resultMap="StatementResultMap">
+        SELECT * FROM statement
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO statement (statement_no, statement_period, agent_code, agent_name, 
+                                total_transaction_amount, total_profit_amount, transaction_count, 
+                                profit_count, statement_status)
+        VALUES (#{statementNo}, #{statementPeriod}, #{agentCode}, #{agentName}, 
+                #{totalTransactionAmount}, #{totalProfitAmount}, #{transactionCount}, 
+                #{profitCount}, #{statementStatus})
+    </insert>
+
+    <update id="update">
+        UPDATE statement SET 
+            statement_period = #{statementPeriod},
+            agent_name = #{agentName},
+            total_transaction_amount = #{totalTransactionAmount},
+            total_profit_amount = #{totalProfitAmount},
+            transaction_count = #{transactionCount},
+            profit_count = #{profitCount},
+            statement_status = #{statementStatus},
+            update_time = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM statement WHERE id = #{id}
+    </delete>
+
+</mapper>

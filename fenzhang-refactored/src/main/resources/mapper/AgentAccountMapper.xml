@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fenzhang.mapper.AgentAccountMapper">
+
+    <resultMap id="AgentAccountResultMap" type="com.fenzhang.entity.AgentAccount">
+        <id column="id" property="id"/>
+        <result column="agent_code" property="agentCode"/>
+        <result column="agent_name" property="agentName"/>
+        <result column="balance" property="balance"/>
+        <result column="total_profit" property="totalProfit"/>
+        <result column="withdraw_amount" property="withdrawAmount"/>
+        <result column="frozen_amount" property="frozenAmount"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="findById" resultMap="AgentAccountResultMap">
+        SELECT * FROM agent_account WHERE id = #{id}
+    </select>
+
+    <select id="findByAgentCode" resultMap="AgentAccountResultMap">
+        SELECT * FROM agent_account WHERE agent_code = #{agentCode}
+    </select>
+
+    <select id="findAll" resultMap="AgentAccountResultMap">
+        SELECT * FROM agent_account
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO agent_account (agent_code, agent_name, balance, total_profit, withdraw_amount, frozen_amount, status)
+        VALUES (#{agentCode}, #{agentName}, #{balance}, #{totalProfit}, #{withdrawAmount}, #{frozenAmount}, #{status})
+    </insert>
+
+    <update id="update">
+        UPDATE agent_account SET 
+            agent_name = #{agentName},
+            balance = #{balance},
+            total_profit = #{totalProfit},
+            withdraw_amount = #{withdrawAmount},
+            frozen_amount = #{frozenAmount},
+            status = #{status},
+            update_time = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateBalance">
+        UPDATE agent_account 
+        SET balance = #{balance}, 
+            total_profit = #{totalProfit},
+            update_time = CURRENT_TIMESTAMP
+        WHERE agent_code = #{agentCode}
+    </update>
+
+    <update id="updateBalanceWithVersion">
+        UPDATE agent_account 
+        SET balance = balance + #{amount}, 
+            total_profit = total_profit + #{amount},
+            update_time = CURRENT_TIMESTAMP
+        WHERE agent_code = #{agentCode} AND balance = #{oldBalance}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM agent_account WHERE id = #{id}
+    </delete>
+
+</mapper>

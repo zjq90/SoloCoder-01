@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fenzhang.mapper.AgentMapper">
+
+    <resultMap id="AgentResultMap" type="com.fenzhang.entity.Agent">
+        <id column="id" property="id"/>
+        <result column="agent_code" property="agentCode"/>
+        <result column="agent_name" property="agentName"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="parent_agent_code" property="parentAgentCode"/>
+        <result column="agent_level" property="agentLevel"/>
+        <result column="profit_rate" property="profitRate"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <select id="findById" resultMap="AgentResultMap">
+        SELECT * FROM agent WHERE id = #{id}
+    </select>
+
+    <select id="findByAgentCode" resultMap="AgentResultMap">
+        SELECT * FROM agent WHERE agent_code = #{agentCode}
+    </select>
+
+    <select id="findByParentAgentCode" resultMap="AgentResultMap">
+        SELECT * FROM agent WHERE parent_agent_code = #{parentAgentCode}
+    </select>
+
+    <select id="findAll" resultMap="AgentResultMap">
+        SELECT * FROM agent
+    </select>
+
+    <select id="findByStatus" resultMap="AgentResultMap">
+        SELECT * FROM agent WHERE status = #{status}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO agent (agent_code, agent_name, parent_id, parent_agent_code, agent_level, profit_rate, status)
+        VALUES (#{agentCode}, #{agentName}, #{parentId}, #{parentAgentCode}, #{agentLevel}, #{profitRate}, #{status})
+    </insert>
+
+    <update id="update">
+        UPDATE agent SET 
+            agent_name = #{agentName},
+            parent_id = #{parentId},
+            parent_agent_code = #{parentAgentCode},
+            agent_level = #{agentLevel},
+            profit_rate = #{profitRate},
+            status = #{status},
+            update_time = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM agent WHERE id = #{id}
+    </delete>
+
+</mapper>
